@@ -46,9 +46,24 @@ public class Schachbrett {
 		// TODO Auto-generated method stub
 
 	}
-	public void bewegeFigur(int zeile, int spalte, Figuren figur)
+	public void bewegeFigur(int zeile, int spalte, Figuren figur, int zielZeile, int zielSpalte)
+	{
+		if(figur == _schachbrett[zeile][spalte])
+		{
+			
+			Figuren f = _schachbrett[zeile][spalte];
+			_schachbrett[zeile][spalte] = null;
+			_schachbrett[zielZeile][zielSpalte] = f;
+		}
+	}
+	private boolean gueltigerSpielzug(int zeile, int spalte, Figuren figur) 
 	{
 		
+		if(figur.gibFigurenArt() == FigurenArt.BAUER)
+		{
+			
+		}
+		return false;
 	}
 
 }
