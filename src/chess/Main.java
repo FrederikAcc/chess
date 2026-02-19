@@ -13,7 +13,12 @@ public class Main {
 		schachbrett.bewegeFigur(1, 0, Figuren.SCHWARZERBAUER, 3, 0);
 		schachbrett.bewegeFigur(0, 0, Figuren.SCHWARZERTURM, 2, 0);
 		schachbrett.bewegeFigur(2, 0, Figuren.SCHWARZERTURM, 2, 5);
+		schachbrett.bewegeFigur(2, 5, Figuren.SCHWARZERTURM, 2, 3);
 		schachbrett.bewegeFigur(0, 6, Figuren.SCHWARZERSPRINGER, 2, 7);
+		schachbrett.bewegeFigur(7, 5, Figuren.WEISSERLAEUFER, 6, 4);
+		schachbrett.bewegeFigur(6, 4, Figuren.WEISSERLAEUFER, 3, 7);
+		schachbrett.bewegeFigur(7, 3, Figuren.WEISSEDAME, 4, 6);
+		schachbrett.bewegeFigur(4, 6, Figuren.WEISSEDAME, 4, 5);
 		System.out.println("Hallo");
 	}
 

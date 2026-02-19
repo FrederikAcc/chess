@@ -51,11 +51,31 @@ public class Schachbrett {
 				bewegeKoenig(zeile, spalte, zielZeile, zielSpalte);
 			} else if (figur.gibFigurenArt() == FigurenArt.TURM) {
 				bewegeTurm(zeile, spalte, zielZeile, zielSpalte);
+			} else if (figur.gibFigurenArt() == FigurenArt.SPRINGER) {
+				bewegeSpringer(zeile, spalte, zielZeile, zielSpalte);
+			} else if (figur.gibFigurenArt() == FigurenArt.LAEUFER) {
+				bewegeLaeufer(zeile, spalte, zielZeile, zielSpalte);
 			}
-			else if(figur.gibFigurenArt() == FigurenArt.SPRINGER)
+			else if(figur.gibFigurenArt() == FigurenArt.DAME)
 			{
-				bewegeSpringer(zeile,spalte,zielZeile,zielSpalte);	
+				bewegeDame(zeile, spalte, zielZeile, zielSpalte);
 			}
+		}
+	}
+
+	private void bewegeDame(int zeile, int spalte, int zielZeile, int zielSpalte) {
+		int diffZeile = zeile - zielZeile;
+		int diffSpalte = spalte - zielSpalte;
+		if (diffZeile < 0) {
+			diffZeile = -diffZeile;
+		}
+		if (diffSpalte < 0) {
+			diffSpalte = -diffSpalte;
+		}
+		if (diffZeile == diffSpalte) {
+			bewegeLaeufer(zeile, spalte, zielZeile, zielSpalte);
+		} else {
+			bewegeTurm(zeile, spalte, zielZeile, zielSpalte);
 		}
 	}
 
@@ -79,7 +99,8 @@ public class Schachbrett {
 
 	private void bewegeTurm(int zeile, int spalte, int zielZeile, int zielSpalte) {
 		if (gueltigerZugTurm(zeile, spalte, zielZeile, zielSpalte)) {
-			if (_schachbrett[zielZeile][zielSpalte] == null || (_schachbrett[zielZeile][zielSpalte].gibFigurenFarbe() != _schachbrett[zeile][spalte].gibFigurenFarbe())) {
+			if (_schachbrett[zielZeile][zielSpalte] == null || (_schachbrett[zielZeile][zielSpalte]
+					.gibFigurenFarbe() != _schachbrett[zeile][spalte].gibFigurenFarbe())) {
 				Figuren f = _schachbrett[zeile][spalte];
 				_schachbrett[zeile][spalte] = null;
 				_schachbrett[zielZeile][zielSpalte] = f;
@@ -89,16 +110,24 @@ public class Schachbrett {
 	}
 
 	private boolean gueltigerZugTurm(int zeile, int spalte, int zielZeile, int zielSpalte) {
-		if (zeile == zielZeile) {
-			for (int s = spalte+1; s < zielSpalte; ++s) {
+		if (zeile == zielZeile && spalte < zielSpalte) {
+			for (int s = spalte + 1; s < zielSpalte; ++s) {
 				Figuren f = _schachbrett[zeile][s];
 				if (f != null) {
 					return false;
 				}
 			}
 			return true;
-		} else if (spalte == zielSpalte) {
-			for (int z = zeile+1; z < zielZeile; ++z) {
+		} else if (spalte == zielSpalte && zeile < zielZeile) {
+			for (int z = zeile + 1; z < zielZeile; ++z) {
+				Figuren fig = _schachbrett[z][spalte];
+				if (fig != null) {
+					return false;
+				}
+			}
+			return true;
+		} else if (spalte == zielSpalte && zeile > zielZeile) {
+			for (int z = zeile - 1; z > zielZeile; --z) {
 				Figuren fig = _schachbrett[z][spalte];
 				if (fig != null) {
 					return false;
@@ -106,30 +135,98 @@ public class Schachbrett {
 			}
 			return true;
 		}
+		if (zeile == zielZeile && spalte > zielSpalte) {
+			for (int s = spalte - 1; s > zielSpalte; --s) {
+				Figuren f = _schachbrett[zeile][s];
+				if (f != null) {
+					return false;
+				}
+			}
+			return true;
+		}
+
 		return false;
 	}
-	
-	private void bewegeSpringer(int zeile, int spalte, int zielZeile, int zielSpalte)
-	{
+
+	private void bewegeLaeufer(int zeile, int spalte, int zielZeile, int zielSpalte) {
+		if (gueltigerZugLaeufer(zeile, spalte, zielZeile, zielSpalte)) {
+			if (_schachbrett[zielZeile][zielSpalte] == null || (_schachbrett[zielZeile][zielSpalte]
+					.gibFigurenFarbe() != _schachbrett[zeile][spalte].gibFigurenFarbe())) {
+				Figuren f = _schachbrett[zeile][spalte];
+				_schachbrett[zeile][spalte] = null;
+				_schachbrett[zielZeile][zielSpalte] = f;
+			}
+
+		}
+	}
+
+	private boolean gueltigerZugLaeufer(int zeile, int spalte, int zielZeile, int zielSpalte) {
 		int diffZeile = zeile - zielZeile;
 		int diffSpalte = spalte - zielSpalte;
-		if(diffZeile < 0)
-		{
+		if (diffZeile < 0) {
 			diffZeile = -diffZeile;
 		}
-		if(diffSpalte < 0)
-		{
-			diffSpalte = - diffSpalte;
+		if (diffSpalte < 0) {
+			diffSpalte = -diffSpalte;
 		}
-		
-		if(diffZeile == 2 && diffSpalte == 1 && ( _schachbrett[zielZeile][zielSpalte] == null || _schachbrett[zeile][spalte].gibFigurenFarbe() != _schachbrett[zielZeile][zielSpalte].gibFigurenFarbe()))
-		{
+		if (diffZeile == diffSpalte) {
+			if (zeile < zielZeile && spalte < zielSpalte) {
+				for (int i = 1; i < diffZeile; ++i) {
+					Figuren fig = _schachbrett[zeile + i][spalte + i];
+					if (fig != null) {
+						return false;
+					}
+				}
+				return true;
+			} else if (zeile > zielZeile && spalte > zielSpalte) {
+				for (int i = 1; i < diffZeile; ++i) {
+					Figuren fig = _schachbrett[zeile - i][spalte - i];
+					if (fig != null) {
+						return false;
+					}
+				}
+				return true;
+			} else if (zeile < zielZeile && spalte > zielSpalte) {
+				for (int i = 1; i < diffZeile; ++i) {
+					Figuren fig = _schachbrett[zeile + i][spalte - i];
+					if (fig != null) {
+						return false;
+					}
+				}
+				return true;
+			} else if (zeile > zielZeile && spalte < zielSpalte) {
+				for (int i = 1; i < diffZeile; ++i) {
+					Figuren fig = _schachbrett[zeile - i][spalte + i];
+					if (fig != null) {
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+		return true;
+
+	}
+
+	private void bewegeSpringer(int zeile, int spalte, int zielZeile, int zielSpalte) {
+		int diffZeile = zeile - zielZeile;
+		int diffSpalte = spalte - zielSpalte;
+		if (diffZeile < 0) {
+			diffZeile = -diffZeile;
+		}
+		if (diffSpalte < 0) {
+			diffSpalte = -diffSpalte;
+		}
+
+		if (diffZeile == 2 && diffSpalte == 1
+				&& (_schachbrett[zielZeile][zielSpalte] == null || _schachbrett[zeile][spalte]
+						.gibFigurenFarbe() != _schachbrett[zielZeile][zielSpalte].gibFigurenFarbe())) {
 			Figuren f = _schachbrett[zeile][spalte];
 			_schachbrett[zeile][spalte] = null;
 			_schachbrett[zielZeile][zielSpalte] = f;
-		}
-		else if( diffZeile == 1 && diffSpalte == 2 && ( _schachbrett[zielZeile][zielSpalte] == null || _schachbrett[zeile][spalte].gibFigurenFarbe() != _schachbrett[zielZeile][zielSpalte].gibFigurenFarbe()))
-		{
+		} else if (diffZeile == 1 && diffSpalte == 2
+				&& (_schachbrett[zielZeile][zielSpalte] == null || _schachbrett[zeile][spalte]
+						.gibFigurenFarbe() != _schachbrett[zielZeile][zielSpalte].gibFigurenFarbe())) {
 			Figuren f = _schachbrett[zeile][spalte];
 			_schachbrett[zeile][spalte] = null;
 			_schachbrett[zielZeile][zielSpalte] = f;
