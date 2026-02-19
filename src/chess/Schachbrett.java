@@ -44,74 +44,107 @@ public class Schachbrett {
 
 	public void bewegeFigur(int zeile, int spalte, Figuren figur, int zielZeile, int zielSpalte) {
 		if ((zielZeile >= 0 && zielSpalte >= 0 && zeile >= 0 && spalte >= 0)
-				&& (zielZeile <= 7 && zielSpalte <= 7 && zeile <= 7 && spalte <= 7)) 
-		{
-			if (figur.gibFigurenArt() == FigurenArt.BAUER) 
-			{
-				bewegeBauer(zeile,spalte,zielZeile, zielSpalte);
-			}
-			else if(figur.gibFigurenArt() == FigurenArt.KOENIG)
-			{
-				bewegeKoenig(zeile,spalte,zielZeile,zielSpalte)
-				{
-					
-				}
+				&& (zielZeile <= 7 && zielSpalte <= 7 && zeile <= 7 && spalte <= 7)) {
+			if (figur.gibFigurenArt() == FigurenArt.BAUER) {
+				bewegeBauer(zeile, spalte, zielZeile, zielSpalte);
+			} else if (figur.gibFigurenArt() == FigurenArt.KOENIG) {
+				bewegeKoenig(zeile, spalte, zielZeile, zielSpalte);
+			} else if (figur.gibFigurenArt() == FigurenArt.TURM) {
+				bewegeTurm(zeile, spalte, zielZeile, zielSpalte);
 			}
 		}
 	}
-	private void bewegeKoenig(int zeile, int spalte, int zielZeile, int zielSpalte)
-	{
+
+	private void bewegeKoenig(int zeile, int spalte, int zielZeile, int zielSpalte) {
+		Figuren figur = _schachbrett[zeile][spalte];
 		int diffZeile = zeile - zielZeile;
 		int diffSpalte = spalte - zielSpalte;
-		
-		
+		if (diffZeile < 0) {
+			diffZeile = -diffZeile;
+		}
+		if (diffSpalte < 0) {
+			diffSpalte = -diffSpalte;
+		}
+		if ((diffSpalte == 1 || diffZeile == 1) && (_schachbrett[zielZeile][zielSpalte] == null
+				|| (figur.gibFigurenFarbe() != _schachbrett[zielZeile][zielSpalte].gibFigurenFarbe()))) {
+			Figuren f = _schachbrett[zeile][spalte];
+			_schachbrett[zeile][spalte] = null;
+			_schachbrett[zielZeile][zielSpalte] = f;
+		}
 	}
 
-	private void bewegeBauer(int zeile, int spalte, int zielZeile, int zielSpalte) 
-	{
-		Figuren figur = _schachbrett[zeile][spalte];
-			if ((zeile - 1 == zielZeile) && spalte == zielSpalte && figur.gibFigurenFarbe() == FigurenFarbe.WEISS
-					&& _schachbrett[zielZeile][zielSpalte] == null) {
-				Figuren f = _schachbrett[zeile][spalte];
-				_schachbrett[zeile][spalte] = null;
-				_schachbrett[zielZeile][zielSpalte] = f;
-
-			} else if ((zeile + 1 == zielZeile) && spalte == zielSpalte
-					&& figur.gibFigurenFarbe() == FigurenFarbe.SCHWARZ
-					&& _schachbrett[zielZeile][zielSpalte] == null) {
-				Figuren f = _schachbrett[zeile][spalte];
-				_schachbrett[zeile][spalte] = null;
-				_schachbrett[zielZeile][zielSpalte] = f;
-
-			} else if ((zeile + 2 == zielZeile) && spalte == zielSpalte
-					&& figur.gibFigurenFarbe() == FigurenFarbe.SCHWARZ
-					&& _schachbrett[zielZeile][zielSpalte] == null && _schachbrett[zeile + 1][spalte] == null
-					&& zeile == 1) {
-				Figuren f = _schachbrett[zeile][spalte];
-				_schachbrett[zeile][spalte] = null;
-				_schachbrett[zielZeile][zielSpalte] = f;
-			} else if ((zeile - 2 == zielZeile) && spalte == zielSpalte
-					&& figur.gibFigurenFarbe() == FigurenFarbe.WEISS && _schachbrett[zielZeile][zielSpalte] == null
-					&& _schachbrett[zeile - 1][spalte] == null && zeile == 6) {
-				Figuren f = _schachbrett[zeile][spalte];
-				_schachbrett[zeile][spalte] = null;
-				_schachbrett[zielZeile][zielSpalte] = f;
-			} else if (zielZeile == zeile + 1 && (zielSpalte == spalte + 1 || zielSpalte == spalte - 1)
-					&& figur.gibFigurenFarbe() == FigurenFarbe.SCHWARZ
-					&& _schachbrett[zielZeile][zielSpalte] != null
-					&& _schachbrett[zielZeile][zielSpalte].gibFigurenFarbe() == FigurenFarbe.WEISS) {
-				Figuren f = _schachbrett[zeile][spalte];
-				_schachbrett[zeile][spalte] = null;
-				_schachbrett[zielZeile][zielSpalte] = f;
-			} else if (zielZeile == zeile - 1 && (zielSpalte == spalte + 1 || zielSpalte == spalte - 1)
-					&& figur.gibFigurenFarbe() == FigurenFarbe.WEISS && _schachbrett[zielZeile][zielSpalte] != null
-					&& _schachbrett[zielZeile][zielSpalte].gibFigurenFarbe() == FigurenFarbe.SCHWARZ) {
+	private void bewegeTurm(int zeile, int spalte, int zielZeile, int zielSpalte) {
+		if (gueltigerZugTurm(zeile, spalte, zielZeile, zielSpalte)) {
+			if (_schachbrett[zielZeile][zielSpalte] == null || (_schachbrett[zielZeile][zielSpalte].gibFigurenFarbe() != _schachbrett[zeile][spalte].gibFigurenFarbe())) {
 				Figuren f = _schachbrett[zeile][spalte];
 				_schachbrett[zeile][spalte] = null;
 				_schachbrett[zielZeile][zielSpalte] = f;
 			}
 
-		
+		}
+	}
+
+	private boolean gueltigerZugTurm(int zeile, int spalte, int zielZeile, int zielSpalte) {
+		if (zeile == zielZeile) {
+			for (int s = spalte+1; s < zielSpalte; ++s) {
+				Figuren f = _schachbrett[zeile][s];
+				if (f != null) {
+					return false;
+				}
+			}
+			return true;
+		} else if (spalte == zielSpalte) {
+			for (int z = zeile+1; z < zielZeile; ++z) {
+				Figuren fig = _schachbrett[z][spalte];
+				if (fig != null) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	private void bewegeBauer(int zeile, int spalte, int zielZeile, int zielSpalte) {
+		Figuren figur = _schachbrett[zeile][spalte];
+		if ((zeile - 1 == zielZeile) && spalte == zielSpalte && figur.gibFigurenFarbe() == FigurenFarbe.WEISS
+				&& _schachbrett[zielZeile][zielSpalte] == null) {
+			Figuren f = _schachbrett[zeile][spalte];
+			_schachbrett[zeile][spalte] = null;
+			_schachbrett[zielZeile][zielSpalte] = f;
+
+		} else if ((zeile + 1 == zielZeile) && spalte == zielSpalte && figur.gibFigurenFarbe() == FigurenFarbe.SCHWARZ
+				&& _schachbrett[zielZeile][zielSpalte] == null) {
+			Figuren f = _schachbrett[zeile][spalte];
+			_schachbrett[zeile][spalte] = null;
+			_schachbrett[zielZeile][zielSpalte] = f;
+
+		} else if ((zeile + 2 == zielZeile) && spalte == zielSpalte && figur.gibFigurenFarbe() == FigurenFarbe.SCHWARZ
+				&& _schachbrett[zielZeile][zielSpalte] == null && _schachbrett[zeile + 1][spalte] == null
+				&& zeile == 1) {
+			Figuren f = _schachbrett[zeile][spalte];
+			_schachbrett[zeile][spalte] = null;
+			_schachbrett[zielZeile][zielSpalte] = f;
+		} else if ((zeile - 2 == zielZeile) && spalte == zielSpalte && figur.gibFigurenFarbe() == FigurenFarbe.WEISS
+				&& _schachbrett[zielZeile][zielSpalte] == null && _schachbrett[zeile - 1][spalte] == null
+				&& zeile == 6) {
+			Figuren f = _schachbrett[zeile][spalte];
+			_schachbrett[zeile][spalte] = null;
+			_schachbrett[zielZeile][zielSpalte] = f;
+		} else if (zielZeile == zeile + 1 && (zielSpalte == spalte + 1 || zielSpalte == spalte - 1)
+				&& figur.gibFigurenFarbe() == FigurenFarbe.SCHWARZ && _schachbrett[zielZeile][zielSpalte] != null
+				&& _schachbrett[zielZeile][zielSpalte].gibFigurenFarbe() == FigurenFarbe.WEISS) {
+			Figuren f = _schachbrett[zeile][spalte];
+			_schachbrett[zeile][spalte] = null;
+			_schachbrett[zielZeile][zielSpalte] = f;
+		} else if (zielZeile == zeile - 1 && (zielSpalte == spalte + 1 || zielSpalte == spalte - 1)
+				&& figur.gibFigurenFarbe() == FigurenFarbe.WEISS && _schachbrett[zielZeile][zielSpalte] != null
+				&& _schachbrett[zielZeile][zielSpalte].gibFigurenFarbe() == FigurenFarbe.SCHWARZ) {
+			Figuren f = _schachbrett[zeile][spalte];
+			_schachbrett[zeile][spalte] = null;
+			_schachbrett[zielZeile][zielSpalte] = f;
+		}
+
 	}
 
 }
