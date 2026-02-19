@@ -52,6 +52,10 @@ public class Schachbrett {
 			} else if (figur.gibFigurenArt() == FigurenArt.TURM) {
 				bewegeTurm(zeile, spalte, zielZeile, zielSpalte);
 			}
+			else if(figur.gibFigurenArt() == FigurenArt.SPRINGER)
+			{
+				bewegeSpringer(zeile,spalte,zielZeile,zielSpalte);	
+			}
 		}
 	}
 
@@ -103,6 +107,33 @@ public class Schachbrett {
 			return true;
 		}
 		return false;
+	}
+	
+	private void bewegeSpringer(int zeile, int spalte, int zielZeile, int zielSpalte)
+	{
+		int diffZeile = zeile - zielZeile;
+		int diffSpalte = spalte - zielSpalte;
+		if(diffZeile < 0)
+		{
+			diffZeile = -diffZeile;
+		}
+		if(diffSpalte < 0)
+		{
+			diffSpalte = - diffSpalte;
+		}
+		
+		if(diffZeile == 2 && diffSpalte == 1 && ( _schachbrett[zielZeile][zielSpalte] == null || _schachbrett[zeile][spalte].gibFigurenFarbe() != _schachbrett[zielZeile][zielSpalte].gibFigurenFarbe()))
+		{
+			Figuren f = _schachbrett[zeile][spalte];
+			_schachbrett[zeile][spalte] = null;
+			_schachbrett[zielZeile][zielSpalte] = f;
+		}
+		else if( diffZeile == 1 && diffSpalte == 2 && ( _schachbrett[zielZeile][zielSpalte] == null || _schachbrett[zeile][spalte].gibFigurenFarbe() != _schachbrett[zielZeile][zielSpalte].gibFigurenFarbe()))
+		{
+			Figuren f = _schachbrett[zeile][spalte];
+			_schachbrett[zeile][spalte] = null;
+			_schachbrett[zielZeile][zielSpalte] = f;
+		}
 	}
 
 	private void bewegeBauer(int zeile, int spalte, int zielZeile, int zielSpalte) {
